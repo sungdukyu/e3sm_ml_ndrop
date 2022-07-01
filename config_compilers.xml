@@ -644,12 +644,14 @@ for mct, etc.
 <compiler COMPILER="intel" MACH="cori-knl">
   <FFLAGS> -convert big_endian -assume byterecl -ftz -traceback -assume realloc_lhs -fp-model consistent -fimf-use-svml </FFLAGS>
   <ADD_FFLAGS DEBUG="FALSE"> -O2 -debug minimal -qno-opt-dynamic-align -fpe0</ADD_FFLAGS>
+  <ADD_FFLAGS> -I/project/projectdirs/m3525/share/FKB64/build/include </ADD_FFLAGS>
   <ADD_CFLAGS compile_threaded="true"> -qopenmp </ADD_CFLAGS>
   <ADD_FFLAGS compile_threaded="true"> -qopenmp </ADD_FFLAGS>
   <ADD_FFLAGS_NOOPT compile_threaded="true"> -qopenmp </ADD_FFLAGS_NOOPT>
   <ADD_LDFLAGS compile_threaded="true"> -qopenmp </ADD_LDFLAGS>
   <CONFIG_ARGS> --host=Linux </CONFIG_ARGS>
   <ADD_SLIBS> -L$(NETCDF_DIR) -lnetcdff -Wl,--as-needed,-L$(NETCDF_DIR)/lib -lnetcdff -lnetcdf </ADD_SLIBS>
+  <ADD_SLIBS> -L/project/projectdirs/m3525/share/FKB64/build/lib -lneural </ADD_SLIBS>
   <ADD_SLIBS> -mkl -lpthread </ADD_SLIBS>
   <ADD_CPPDEFS> -DARCH_MIC_KNL </ADD_CPPDEFS>
   <SFC> ifort </SFC>
@@ -1438,7 +1440,6 @@ for mct, etc.
   <MPICC MPILIB="impi"> mpiicc  </MPICC>
   <MPICXX MPILIB="impi"> mpiicpc </MPICXX>
 </compiler>
-
 
 <compiler MACH="grizzly" COMPILER="gnu">
 	<PIO_FILESYSTEM_HINTS>lustre</PIO_FILESYSTEM_HINTS>
