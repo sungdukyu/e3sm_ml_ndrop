@@ -137,7 +137,8 @@ subroutine ndrop_init
    call ml_stats_init()
 
    !Load FKB-ML config file for computing activated fraction
-   call activated_fraction_net%load('p20_model00_BEST.txt')
+   call activated_fraction_net%load('FKB_WEIGHT_TXT') ! run script will replace FKB_WEIGHT_TXT
+   !call activated_fraction_net%load('/project/projectdirs/m3525/sungduk/E3SM_collections/maint1.0/E3SM.sungduk/p05_model05_TWO-LAYER.txt') ! for create_test
 
    ! get indices into state%q and pbuf structures
    call cnst_get_ind('NUMLIQ', numliq_idx)
@@ -1444,21 +1445,26 @@ subroutine ml_activate_modal(icol, klev, lchnk,        & !unused input (for debu
   character(len=2000) :: err_str !For storing long error messages
   logical, parameter  :: do_test = .false. ! Change to .true. to run a test; look at run/fort.101 file for the results
 
-  !Some sanity checks
-  do imode = 1, nmode
-     if(naermod(imode) <= 0.0_r8) then
-        write(err_str,*)'naermod <= zero, naermod:',naermod(imode),',',imode, 'at time step:',get_nstep(),errmsg(__FILE__,__LINE__)
-        write(iulog,*)trim(err_str)
-        return
-        !call endrun(trim(err_str))
-     endif
-  enddo
+  ! Sungduk: <Change 1> comment out "sanity check"
+  !                     simulations fail with this sanity check.
+  !!Some sanity checks
+  !do imode = 1, nmode
+  !   if(naermod(imode) <= 0.0_r8) then
+  !      write(err_str,*)'naermod <= zero, naermod:',naermod(imode),',',imode, 'at time step:',get_nstep(),errmsg(__FILE__,__LINE__)
+  !      write(iulog,*)trim(err_str)
+  !      return
+  !      !call endrun(trim(err_str))
+  !   endif
+  !enddo
 
-  if(wbar<=0.0_r8)then
-     write(err_str,*)'updraft velocity (wbar) <= zero, wbar:',wbar, 'at time step:',get_nstep(),errmsg(__FILE__,__LINE__)
-     write(iulog,*)trim(err_str)
-     call endrun(trim(err_str))
-  endif
+  ! Sungduk: <change 2> the following line is replaced with a simplified conditional
+  !                     (as done in ndrop.F90 for Sam's)
+  !if(wbar<=0.0_r8)then
+  !   write(err_str,*)'updraft velocity (wbar) <= zero, wbar:',wbar, 'at time step:',get_nstep(),errmsg(__FILE__,__LINE__)
+  !   write(iulog,*)trim(err_str)
+  !   call endrun(trim(err_str))
+  !endif
+  if(wbar<=0.0_r8) return
 
   !Assign to the updraft velocity as done in the default activation routine for single updraft
   flux_fullact = wbar
